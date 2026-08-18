@@ -15,7 +15,7 @@ export const BOUTIQUE = {
   fondImage: "",
 
   // Dépôt GitHub de cette boutique, lu par l'atelier pour publier.
-  depot: "",
+  depot: "lindienmara/La-Maison-Mapuche",
 
   // Où arrivent les commandes : whatsapp, telegram, signal ou snapchat.
   // « contact » est le numéro ou le pseudo selon l'application choisie.

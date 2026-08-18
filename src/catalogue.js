@@ -5,11 +5,12 @@
 
 export const FAMILLES = [
   {
-    id: "premiere-famille",
-    nom: "PREMIÈRE FAMILLE",
-    emoji: "📦",
+    id: "nike",
+    nom: "Nike",
+    emoji: "👟",
     glyphe: "boite",
     image: "",
+    video: "/videos/video-nike.mp4",
     type: "produits",
     couleurs: ["#11998E", "#0B5E4F"],
     gammes: [
@@ -20,6 +21,16 @@ export const FAMILLES = [
         sousTitre: "",
         produits: [
           { ref: "REF-001", nom: "Premier produit", unite: "la pièce", prix: 0, dispo: true },
+        ],
+      },
+      {
+        id: "tn",
+        nom: "TN",
+        etiquette: "FR",
+        sousTitre: "",
+        produits: [
+          { ref: "REF-001", nom: "TN Noire", unite: "la pièce", prix: 60, dispo: true, tailles: "39. 40. 42. 43", couleurs: "Noire", cadrage: "entier", image: "/produits/tn-noire.jpg", 
+            images: ["/produits/tn-noire.jpg", "/produits/tn-noire-2.jpg"] },
         ],
       },
     ],
