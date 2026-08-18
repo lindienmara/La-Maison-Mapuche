@@ -1,7 +1,9 @@
 // CATALOGUE — TROIS NIVEAUX
 // -------------------------
 // FAMILLE  →  GAMME  →  PRODUIT
-// Fichier produit par l'atelier : file://
+//
+// Ici une FAMILLE est une MARQUE. Dans la présentation « par marques », la
+// gamme ne s'affiche pas : elle ne sert qu'à ranger.
 
 export const FAMILLES = [
   {
@@ -15,22 +17,60 @@ export const FAMILLES = [
     couleurs: ["#11998E", "#0B5E4F"],
     gammes: [
       {
-        id: "premiere-gamme",
-        nom: "PREMIÈRE GAMME",
+        id: "modeles",
+        nom: "Modèles",
         etiquette: "",
         sousTitre: "",
         produits: [
-          { ref: "REF-001", nom: "Premier produit", unite: "la pièce", prix: 0, dispo: true },
+          { ref: "NK-TN-NOIRE", nom: "TN Noire", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Noire", chef: true, cadrage: "entier", image: "/produits/tn-noire.jpg",
+            images: ["/produits/tn-noire.jpg", "/produits/tn-noire-2.jpg"],
+            description: "" },
+          { ref: "NK-TN-BLANCHE", nom: "TN Blanche", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Blanche", chef: true,
+            description: "" },
+          { ref: "NK-TN-BLEUE", nom: "TN Bleue", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Bleue", chef: true,
+            description: "" },
         ],
       },
+    ],
+  },
+  {
+    id: "asics",
+    nom: "Asics",
+    emoji: "🔷",
+    glyphe: "etoile",
+    image: "",
+    video: "",
+    type: "produits",
+    couleurs: ["#2E5BFF", "#12277A"],
+    gammes: [
       {
-        id: "tn",
-        nom: "TN",
-        etiquette: "FR",
+        id: "modeles",
+        nom: "Modèles",
+        etiquette: "",
         sousTitre: "",
         produits: [
-          { ref: "REF-001", nom: "TN Noire", unite: "la pièce", prix: 60, dispo: true, tailles: "39. 40. 42. 43", couleurs: "Noire", cadrage: "entier", image: "/produits/tn-noire.jpg", 
-            images: ["/produits/tn-noire.jpg", "/produits/tn-noire-2.jpg"] },
+
+        ],
+      },
+    ],
+  },
+  {
+    id: "saucony",
+    nom: "Saucony",
+    emoji: "🔶",
+    glyphe: "sac",
+    image: "",
+    video: "",
+    type: "produits",
+    couleurs: ["#F2994A", "#8A4B10"],
+    gammes: [
+      {
+        id: "modeles",
+        nom: "Modèles",
+        etiquette: "",
+        sousTitre: "",
+        produits: [
+
         ],
       },
     ],

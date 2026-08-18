@@ -426,24 +426,37 @@ export function MoyensDePaiement({ total = 0, reference = "" }) {
    On coupe donc sur tout ce qui sépare visiblement, et on garde l'ordre écrit :
    une pointure se lit de la plus petite à la plus grande, et le vendeur l'a
    déjà rangée ainsi. */
-/* LA VIRGULE A DEUX MÉTIERS, ET C'EST TOUT LE PROBLÈME.
-   Elle sépare — « 39, 40, 41 » — mais elle marque aussi la demi-pointure :
-   « 38,5 ». Prise pour un séparateur dans les deux cas, « 38,5 » devenait deux
-   pointures, « 38 » et « 5 ». Le client voyait une taille 5 pour homme.
+/* DÉCOUPER UNE LISTE ÉCRITE À LA MAIN.
 
-   La règle qui les départage tient en une observation : une demi-pointure
-   s'écrit TOUJOURS « ,5 ». Une virgule suivie d'un 5 seul est donc une
-   décimale ; toutes les autres séparent. « 39,5 · 40 » et « 39,40,41 » se
-   lisent alors correctement tous les deux.
+   Le vendeur écrit ses tailles comme il les dit. Vu en vrai dans une vraie
+   boutique : « 39. 40. 42. 43 » — avec des points. Ailleurs : « 39, 40 »,
+   « 39 · 40 », « 39/40 », ou simplement « 39 40 41 ». Toutes ces façons sont
+   justes. C'est au logiciel de s'adapter, pas au vendeur d'apprendre une
+   syntaxe qu'il n'a pas demandée.
 
-   On met la décimale à l'abri le temps de découper, puis on la remet. */
+   DEUX PIÈGES, et ils tirent en sens contraire.
+
+   1. La virgule et le point séparent — mais ils marquent AUSSI la demi-
+      pointure : « 38,5 », « 38.5 ». Pris pour des séparateurs, « 38,5 »
+      devenait deux tailles, « 38 » et « 5 » : un 5 pour homme. Une demi-
+      pointure s'écrivant toujours « ,5 » ou « .5 », on met celles-là à l'abri
+      le temps de découper.
+
+   2. L'espace sépare — mais pas toujours : « 8 US » est UNE taille en deux
+      mots. On ne coupe donc sur les espaces que si TOUT le morceau est fait de
+      nombres séparés par des espaces. « 39 40 41 » se coupe, « 8 US » reste
+      entier. */
 const DECIMALE = "\u0000";
+const QUE_DES_NOMBRES = /^\d+(?:[.,]\d)?(?:\s+\d+(?:[.,]\d)?)+$/;
 
 export const CHOIX = (texte) =>
   String(texte || "")
-    .replace(/(\d),(5)(?!\d)/g, "$1" + DECIMALE + "$2")
-    .split(/[·,;|\/\n]+|\s{2,}/)
-    .map((x) => x.split(DECIMALE).join(",").trim())
+    .replace(/(\d)([.,])(5)(?!\d)/g, "$1" + DECIMALE + "$3")
+    .split(/[·,;|\/\n.]+/)
+    .flatMap((x) => {
+      const morceau = x.split(DECIMALE).join(",").trim();
+      return QUE_DES_NOMBRES.test(morceau) ? morceau.split(/\s+/) : [morceau];
+    })
     .filter(Boolean);
 
 export function texteCommande(items, reference = "") {

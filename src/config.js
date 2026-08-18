@@ -27,13 +27,13 @@ export const BOUTIQUE = {
 
   // Présentation du catalogue : "familles" (on descend) ou "liste" (tout sur
   // une page, avec recherche). Changeable à tout moment.
-  presentation: "luxe",
+  presentation: "marques",
 
   // Forme du cadre réservé aux photos : carre, portrait, paysage ou libre.
-  formatPhoto: "carre",
+  formatPhoto: "portrait",
   // true = image entière dans ce cadre, false = recadrée pour le remplir.
   // Chaque produit peut décider autrement, dans son propre champ « cadrage ».
-  imageEntiere: false,
+  imageEntiere: true,
 
   // Bloc mis en avant sur l'accueil. Vide = masqué.
   enAvant: "",
