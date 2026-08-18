@@ -1,9 +1,7 @@
 // CATALOGUE — TROIS NIVEAUX
 // -------------------------
 // FAMILLE  →  GAMME  →  PRODUIT
-//
-// Ici une FAMILLE est une MARQUE. Dans la présentation « par marques », la
-// gamme ne s'affiche pas : elle ne sert qu'à ranger.
+// Fichier produit par l'atelier : file://
 
 export const FAMILLES = [
   {
@@ -22,13 +20,12 @@ export const FAMILLES = [
         etiquette: "",
         sousTitre: "",
         produits: [
-          { ref: "NK-TN-NOIRE", nom: "TN Noire", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Noire", chef: true, cadrage: "entier", image: "/produits/tn-noire.jpg",
-            images: ["/produits/tn-noire.jpg", "/produits/tn-noire-2.jpg"],
-            description: "" },
-          { ref: "NK-TN-BLANCHE", nom: "TN Blanche", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Blanche", chef: true,
-            description: "" },
-          { ref: "NK-TN-BLEUE", nom: "TN Bleue", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Bleue", chef: true,
-            description: "" },
+          { ref: "NK-TN-NOIRE", nom: "TN Noire", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Noire", chef: true, cadrage: "entier", image: "/produits/tn-noire.jpg", 
+            images: ["/produits/tn-noire.jpg", "/produits/tn-noire-2.jpg"] },
+          { ref: "NK-TN-BLANCHE", nom: "TN Blanche", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Blanche", chef: true, image: "/produits/tn-blanche.jpg", 
+            images: ["/produits/tn-blanche.jpg", "/produits/tn-blanche-2.jpg"] },
+          { ref: "NK-TN-BLEUE", nom: "TN Bleue", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Bleue", chef: true, image: "/produits/tn-bleue.jpg", 
+            images: ["/produits/tn-bleue.jpg", "/produits/tn-bleue-2.jpg"] },
         ],
       },
     ],
