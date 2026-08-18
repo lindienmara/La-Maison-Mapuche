@@ -54,6 +54,7 @@ export const MODELES = (famille) =>
 
 function Marque({ famille, onFamille }) {
   const modeles = MODELES(famille);
+  const [videoRatee, setVideoRatee] = useState(false);
 
   /* La photo de la marque si elle en a une, sinon celle de son premier modèle,
      sinon le dessin de secours. Une case vide serait la seule chose à ne pas
@@ -69,17 +70,43 @@ function Marque({ famille, onFamille }) {
       className="relative block w-full overflow-hidden active:scale-[.985] transition-transform"
       style={{ aspectRatio: PROPORTION_MARQUE, background: "#0A0A0C" }}
     >
-      {/* L'IMAGE ENTIÈRE, JAMAIS ROGNÉE.
-          Ces tuiles montrent des photos de PRODUIT — une paire de chaussures,
-          pas un décor. « object-cover » remplirait mieux le cadre, mais en
-          coupant les bords : la semelle ou le talon disparaîtraient. Une
-          chaussure amputée ne donne envie d'entrer dans aucun rayon. */}
-      <img
-        src={affiche}
-        alt={famille.nom}
-        className="w-full h-full object-contain"
-        onError={(e) => { e.currentTarget.src = visuelFamille(famille); }}
-      />
+      {/* UNE VIDÉO QUI TOURNE, SI LA MARQUE EN A UNE.
+
+          Quatre attributs, et chacun est indispensable :
+            muted     — sans le silence, AUCUN téléphone ne démarre une vidéo
+                        tout seul. C'est la règle de tous les navigateurs, et
+                        c'est elle qu'on oublie en premier.
+            playsInline — sans lui, l'iPhone passe en plein écran dès la
+                        lecture : la boutique disparaît derrière un lecteur.
+            loop      — une tuile qui s'arrête au bout de six secondes et reste
+                        figée est pire qu'une photo.
+            preload="metadata" — on ne télécharge pas les trois vidéos en
+                        entier avant d'avoir montré la page.
+
+          Et si la vidéo manque ou refuse de se lire, on retombe sur l'image :
+          une tuile noire ne dit rien à personne. */}
+      {(famille.video || "").trim() && !videoRatee ? (
+        <video
+          src={famille.video}
+          poster={affiche}
+          autoPlay muted loop playsInline
+          preload="metadata"
+          className="w-full h-full object-contain"
+          onError={() => setVideoRatee(true)}
+        />
+      ) : (
+        /* L'IMAGE ENTIÈRE, JAMAIS ROGNÉE.
+           Ces tuiles montrent des photos de PRODUIT — une paire de chaussures,
+           pas un décor. « object-cover » remplirait mieux le cadre, mais en
+           coupant les bords : la semelle ou le talon disparaîtraient. Une
+           chaussure amputée ne donne envie d'entrer dans aucun rayon. */
+        <img
+          src={affiche}
+          alt={famille.nom}
+          className="w-full h-full object-contain"
+          onError={(e) => { e.currentTarget.src = visuelFamille(famille); }}
+        />
+      )}
       {/* Le voile sombre : sans lui, le nom de la marque devient illisible dès
           que la photo est claire — et une photo de produit l'est souvent. */}
       <div
