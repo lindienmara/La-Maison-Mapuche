@@ -78,8 +78,8 @@ export const FAMILLES = [
         etiquette: "",
         sousTitre: "",
         produits: [
-          { ref: "SA-OMNI-BLEUE", nom: "Omni 9 Bleu ciel", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Bleu ciel et crème", cadrage: "entier", image: "/produits/omni-9-bleu-ciel.jpg", 
-            images: ["/produits/omni-9-bleu-ciel.jpg", "/produits/omni-9-bleu-ciel-2.jpg"], 
+          { ref: "SA-OMNI-BLEUE", nom: "Omni 9 Bleu ciel", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Bleu ciel et crème", cadrage: "entier", image: "/produits/omni-9-bleu-ciel-2.jpg", 
+            images: ["/produits/omni-9-bleu-ciel-2.jpg", "/produits/omni-9-bleu-ciel.jpg"], 
             description: "L'Omni 9 en bleu ciel, empiècements crème nacrés, semelle blanche et lacets assortis. Mesh aéré et empiècements brillants thermosoudés, amorti ProGrid et zone d'impact SRC sous le talon. Chausse juste : prendre sa pointure habituelle." },
           { ref: "SA-OMNI-VIOLETTE", nom: "Omni 9 Violette", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Blanc et violet", image: "/produits/omni-9-violette.jpg", 
             images: ["/produits/omni-9-violette.jpg", "/produits/omni-9-violette-2.jpg"], 
