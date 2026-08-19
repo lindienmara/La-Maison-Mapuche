@@ -9,10 +9,10 @@ export const BOUTIQUE = {
 
   // Logo : un emoji, ou un fichier déposé dans public/ (prioritaire).
   emoji: "👟",
-  logo: "",
+  logo: "/produits/logo.jpg",
 
   // Image de fond de la boutique, dans public/. Vide = simple halo coloré.
-  fondImage: "",
+  fondImage: "/produits/fond.jpg",
 
   // Dépôt GitHub de cette boutique, lu par l'atelier pour publier.
   depot: "lindienmara/La-Maison-Mapuche",
@@ -20,9 +20,9 @@ export const BOUTIQUE = {
   // Où arrivent les commandes : whatsapp, telegram, signal ou snapchat.
   // « contact » est le numéro ou le pseudo selon l'application choisie.
   messagerie: "whatsapp",
-  contact: "",
+  contact: "0758810894",
   // Conservé pour les boutiques encore sur un ancien moteur.
-  whatsapp: "",
+  whatsapp: "0758810894",
   accroche: "Bonjour La Maison Mapuche, je souhaite commander :",
 
   // Présentation du catalogue : "familles" (on descend) ou "liste" (tout sur
@@ -53,10 +53,10 @@ export const BOUTIQUE = {
 
   // Ouverture de la boutique, jouée une fois par visite.
   // introVideo vide = titre animé, sans rien à charger.
-  introActive: false,
-  introTexte: "BIENVENUE — LA MAISON MAPUCHE",
-  introVideo: "",
-  introDuree: 3,
+  introActive: true,
+  introTexte: "Boutique a Vendre",
+  introVideo: "/videos/tunnel.mp4",
+  introDuree: 8,
 
   // Onglets du bas de la boutique.
   afficherInfos: true,
