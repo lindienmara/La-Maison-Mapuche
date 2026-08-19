@@ -3,8 +3,8 @@
 // Fichier produit par l'atelier : file://
 
 export const BOUTIQUE = {
-  nom: "La Maison Mapuche",
-  bandeau: "NOUVEAUTÉS",
+  nom: "Maison Mapuche",
+  bandeau: "",
   sousTitre: "",
 
   // Logo : un emoji, ou un fichier déposé dans public/ (prioritaire).
