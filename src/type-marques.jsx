@@ -28,7 +28,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { visuelFamille, visuelProduit } from "./visuels.js";
 import {
-  FAMILLES, EST_VIDEOS, GALERIE, CLE, euros, PROPORTION_PHOTO, ChoixEtCommande,
+  FAMILLES, EST_VIDEOS, EN_RUPTURE, GALERIE, CLE, euros, PROPORTION_PHOTO, ChoixEtCommande,
+  CadreVideo,
   TITRE, CORPS, CARTE, bordure, texte, texteDoux, jaune,
 } from "./commun.jsx";
 
@@ -136,7 +137,9 @@ function Marque({ famille, onFamille }) {
           {(famille.nom || "").toUpperCase()}
         </p>
         <p className="mt-1.5 text-[12px]" style={{ color: "#D8D8D8", fontFamily: CORPS, letterSpacing: ".08em" }}>
-          {modeles.length} modèle{modeles.length > 1 ? "s" : ""} — voir la collection
+          {EN_RUPTURE(famille)
+            ? "Rayon épuisé — à revoir bientôt"
+            : `${modeles.length} modèle${modeles.length > 1 ? "s" : ""} — voir la collection`}
         </p>
       </div>
     </button>
@@ -252,6 +255,8 @@ export function EcranCarrousel({ famille, onAjouter, onRetour }) {
 
   const { produit } = courant;
   const photo = galerie[Math.min(j, np - 1)];
+  const aVideo = !!(produit.video || "").trim();
+  const aPhoto = GALERIE(produit).length > 0;
 
   /* LA PAGE D'UN MODÈLE — UNE COLONNE, DE HAUT EN BAS.
 
@@ -287,6 +292,13 @@ export function EcranCarrousel({ famille, onAjouter, onRetour }) {
         </span>
       </div>
 
+      {/* Pas de photo, mais un film : le film prend simplement sa place. */}
+      {aVideo && !aPhoto ? (
+        <div className="mx-3">
+          <CadreVideo produit={produit} couleur={(famille.couleurs || [])[0]} />
+        </div>
+      ) : (
+      <>
       {/* LA PHOTO, en grand, dans la forme choisie pour la boutique. */}
       <div className="relative mx-3 rounded-2xl overflow-hidden"
         style={{ aspectRatio: PROPORTION_MARQUE, background: "#08080A", border: `1px solid ${bordure}` }}>
@@ -327,6 +339,16 @@ export function EcranCarrousel({ famille, onAjouter, onRetour }) {
           </span>
         )}
       </div>
+      </>
+      )}
+
+      {/* Des photos ET un film : le film se déroule juste dessous, déjà lancé,
+          au lieu d'attendre derrière un bouton. */}
+      {aVideo && aPhoto && (
+        <div className="mx-3 mt-3">
+          <CadreVideo produit={produit} couleur={(famille.couleurs || [])[0]} />
+        </div>
+      )}
 
       {/* LES AUTRES MODÈLES, EN VIGNETTES.
 

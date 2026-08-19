@@ -23,7 +23,7 @@ import {
   CLE, PROPORTION_PHOTO, STYLE_PHOTO, FOND_IMAGE, COLONNE, CARTE, VOILE, FOND_PAGE,
   DEGRADE, TITRE, CORPS, INTRO, ANIMATIONS, telegram, euros, MESSAGERIES,
   MESSAGERIE, CONTACT, Photo, Video, Etiquette, Prix, BarreSection, Vedettes, RemonterEnHaut, MoyensDePaiement, referenceCommande, PEUT_COMMANDER,
-  AVIS, Carrousel, CHOIX, ChoixEtCommande,
+  AVIS, Carrousel, CHOIX, ChoixEtCommande, CadreVideo,
   cartTotal, texteCommande, lienCommande, copierAvantDePartir,
   fond, fondCarte, bordure, texte, texteDoux, rose, violet, vert, jaune, cyan,
 } from "./commun.jsx";
@@ -165,16 +165,43 @@ function EcranProduits({ famille, gamme, onProduit, onRetour }) {
   );
 }
 
+/* Dans une galerie de vidéos, la vignette EST la vidéo : sa première image
+   s'affiche au lieu du dessin de remplacement. Elle ne se lance pas — dix
+   vidéos qui démarreraient ensemble videraient le forfait du visiteur. Elle se
+   charge juste assez pour se montrer, et l'appui ouvre le plein écran. */
+function VignetteVideo({ produit, famille, source, className }) {
+  return (
+    <Video
+      source={produit.video}
+      nom={produit.nom}
+      muet
+      auto={false}
+      controles={false}
+      className={className}
+      style={STYLE_PHOTO(produit)}
+      secours={
+        <Photo produit={produit} secours={SECOURS(produit, famille)} source={source} alt={produit.nom} className={className} />
+      }
+    />
+  );
+}
+
 function EcranFiche({ famille, gamme, produit, onRetour, onAjouter, onOuvrir, onVideo }) {
   const image = visuelProduit(produit, famille.couleurs, famille.glyphe);
   const photos = GALERIE(produit);
-  const aPlus = photos.length > 1 || !!(produit.description || "").trim() || !!(produit.video || "").trim();
+  const aVideo = !!(produit.video || "").trim();
+  const aPhoto = photos.length > 0;
+  const aPlus = photos.length > 1 || !!(produit.description || "").trim() || aVideo;
 
   return (
     <>
       <BarreSection titre={produit.nom} onRetour={onRetour} />
 
       <div className="px-3 mt-3">
+        {/* Pas de photo, mais un film : le film prend simplement sa place. */}
+        {aVideo && !aPhoto ? (
+          <CadreVideo produit={produit} couleur={famille.couleurs[0]} onPleinEcran={onVideo} />
+        ) : (
         <button
           onClick={() => onOuvrir(produit)}
           className="relative w-full rounded-2xl overflow-hidden block"
@@ -199,6 +226,7 @@ function EcranFiche({ famille, gamme, produit, onRetour, onAjouter, onOuvrir, on
             <span className="absolute top-3 left-3"><Etiquette couleur="#888">Épuisé</Etiquette></span>
           )}
         </button>
+        )}
 
         {photos.length > 1 && (
           <div className="flex gap-2 mt-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
@@ -216,17 +244,12 @@ function EcranFiche({ famille, gamme, produit, onRetour, onAjouter, onOuvrir, on
           </div>
         )}
 
-        {produit.video && (
-          <button
-            onClick={() => onVideo(produit)}
-            className="w-full mt-3 py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform"
-            style={{ background: CARTE, border: `2px solid ${cyan}`, boxShadow: `0 0 16px ${cyan}33` }}
-          >
-            <PlayCircle size={20} color={cyan} />
-            <span style={{ fontFamily: TITRE, fontSize: 16, color: cyan, letterSpacing: ".5px" }}>
-              VOIR LA VIDÉO
-            </span>
-          </button>
+        {/* Des photos ET un film : le film se déroule juste dessous, déjà
+            lancé, au lieu d'attendre derrière un bouton. */}
+        {aVideo && aPhoto && (
+          <div className="mt-3">
+            <CadreVideo produit={produit} couleur={famille.couleurs[0]} onPleinEcran={onVideo} />
+          </div>
         )}
       </div>
 
@@ -463,14 +486,17 @@ function Intro({ onFini }) {
 // l'une après l'autre, son descriptif, et sa vidéo s'il en a une. Chaque partie
 // n'apparaît que si elle existe.
 function Visionneuse({ produit, famille, depart = 0, onFermer }) {
-  const [i, setI] = useState(depart);
-  const [surVideo, setSurVideo] = useState(false);
-  const doigtX = useRef(null);
-
   const photos = GALERIE(produit);
   const affichees = photos.length ? photos : [visuelProduit(produit, famille.couleurs, famille.glyphe)];
   const plusieurs = affichees.length > 1;
   const aVideo = !!(produit.video || "").trim();
+
+  const [i, setI] = useState(depart);
+  // Un produit filmé et non photographié s'ouvre directement sur son film :
+  // sinon la visionneuse s'ouvrait sur le dessin de remplacement, et il fallait
+  // encore un bouton pour atteindre la seule vraie image du produit.
+  const [surVideo, setSurVideo] = useState(aVideo && photos.length === 0);
+  const doigtX = useRef(null);
 
   const suivante = () => setI((n) => (n + 1) % affichees.length);
   const precedente = () => setI((n) => (n - 1 + affichees.length) % affichees.length);
@@ -607,7 +633,11 @@ function EcranVideos({ famille, onRetour, onVideo }) {
                       opacity: jouable ? 1 : 0.55,
                     }}
                   >
-                    <Photo produit={p} secours={SECOURS(p, famille)} source={affiche} alt={p.nom} className="w-full block" />
+                    {jouable ? (
+                      <VignetteVideo produit={p} famille={famille} source={affiche} className="w-full block" />
+                    ) : (
+                      <Photo produit={p} secours={SECOURS(p, famille)} source={affiche} alt={p.nom} className="w-full block" />
+                    )}
                     {jouable && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <span

@@ -42,7 +42,32 @@ function brouillon() {
 export const APERCU = brouillon();
 export const BOUTIQUE = APERCU ? { ...BOUTIQUE_PUBLIEE, ...APERCU.BOUTIQUE } : BOUTIQUE_PUBLIEE;
 export const COULEURS = APERCU ? { ...COULEURS_PUBLIEES, ...APERCU.COULEURS } : COULEURS_PUBLIEES;
-export const FAMILLES = APERCU ? APERCU.FAMILLES : FAMILLES_PUBLIEES;
+/* ───────────── UN RAYON PEUT FERMER SANS DISPARAÎTRE ─────────────
+   Le fournisseur n'a pas livré, la saison est finie, le vendeur s'absente une
+   semaine. Jusqu'ici la seule sortie était de SUPPRIMER la famille — et avec
+   elle ses articles, ses prix, ses photos et ses descriptions, tout à
+   ressaisir au retour. Personne ne devrait avoir à détruire son rayon pour
+   dire « pas cette semaine ».
+
+   Une famille porte donc un interrupteur, « dispo ». Fermée, elle reste
+   visible et se visite : le client voit ce qui existe, comprend que ce n'est
+   pas commandable aujourd'hui, et revient. Un seul geste la rouvre, intacte.
+
+   Le réglage est appliqué ICI, une seule fois, en marquant chaque article
+   épuisé. Tout le reste de la boutique — étiquettes, panier, bouton de
+   commande, vedettes — sait déjà traiter un article épuisé : aucun écran n'a à
+   connaître la notion de rayon fermé. */
+export const EN_RUPTURE = (f) => !!f && f.dispo === false;
+
+const RAYON_FERME = (f) => (!EN_RUPTURE(f) ? f : {
+  ...f,
+  gammes: (f.gammes || []).map((g) => ({
+    ...g,
+    produits: (g.produits || []).map((p) => ({ ...p, dispo: false })),
+  })),
+});
+
+export const FAMILLES = (APERCU ? APERCU.FAMILLES : FAMILLES_PUBLIEES).map(RAYON_FERME);
 
 // Une famille peut être une galerie de vidéos au lieu d'un rayon de produits.
 // Elle se place où on veut dans la liste, et rien ne s'y achète : ni prix, ni
@@ -492,9 +517,33 @@ export function copierAvantDePartir(texte) {
    Une vidéo qui ne se charge pas ne doit pas laisser un rectangle noir muet :
    dans neuf cas sur dix le fichier n'a simplement pas été déposé dans
    public/videos, et personne ne peut le deviner. Le lecteur le dit. */
-export function Video({ source, nom, className, style }) {
+export function Video({
+  source, nom, className, style,
+  muet = false, boucle = false, auto = true, controles = true, secours = null,
+}) {
   const [erreur, setErreur] = useState(false);
+  const lecteur = useRef(null);
 
+  /* ★ POURQUOI « MUET » EST POSÉ À LA MAIN
+     Aucun navigateur ne lance tout seul une vidéo qui a du son : c'est une
+     règle, pas un réglage, et elle protège le visiteur. Muette, la même vidéo
+     démarre partout sans rien demander — et le son reste à un doigt, dans les
+     commandes du lecteur. Or React n'applique pas toujours l'attribut avant que
+     le navigateur ne prenne sa décision : on le pose donc nous-mêmes sur le
+     lecteur, juste avant de demander la lecture. */
+  useEffect(() => {
+    const v = lecteur.current;
+    if (!v) return;
+    v.muted = muet;
+    if (auto) {
+      const lecture = v.play();
+      if (lecture && lecture.catch) lecture.catch(() => {});
+    }
+  }, [source, muet, auto]);
+
+  // Une vignette a son propre dessin de secours : elle ne doit pas se changer
+  // en pavé d'explications au milieu d'une grille.
+  if (erreur && secours) return secours;
   if (erreur) {
     return (
       <div
@@ -515,17 +564,62 @@ export function Video({ source, nom, className, style }) {
 
   return (
     <video
+      ref={lecteur}
       src={source}
-      controls
-      autoPlay
+      controls={controles}
+      autoPlay={auto}
+      loop={boucle}
+      muted={muet}
       playsInline
-      preload="metadata"
+      preload={auto ? "auto" : "metadata"}
       onError={() => setErreur(true)}
       title={nom}
       className={className}
-      style={style}
-      onClick={(e) => e.stopPropagation()}
+      style={controles ? style : { ...style, pointerEvents: "none" }}
+      onClick={controles ? (e) => e.stopPropagation() : undefined}
     />
+  );
+}
+
+/* ───────────── UNE VIDÉO SE MONTRE, ELLE NE S'ANNONCE PAS ─────────────
+   Une vidéo de produit se cachait derrière un bouton « VOIR LA VIDÉO » : il
+   fallait un geste de plus pour voir ce que le vendeur avait filmé, et sur une
+   fiche sans photo il ne restait qu'un dessin de remplacement à la place de
+   l'article. La vidéo s'affiche donc à même la page, dans son cadre, et part
+   toute seule, en boucle, comme une vitrine.
+
+   Muette au départ : c'est la condition pour qu'un navigateur accepte de la
+   lancer sans qu'on le lui demande. Le son s'allume d'un doigt.
+
+   Ce cadre vit ici, dans le tronc commun, parce que TOUS les types de boutique
+   en ont besoin — la fiche partagée comme le carrousel des marques. */
+export function CadreVideo({ produit, couleur, onPleinEcran }) {
+  return (
+    <div
+      className="relative w-full rounded-2xl overflow-hidden"
+      style={{ border: `2px solid ${couleur || bordure}`, boxShadow: couleur ? `0 0 24px ${couleur}33` : "none", background: "#000" }}
+    >
+      <Video
+        source={produit.video}
+        nom={produit.nom}
+        muet
+        boucle
+        className="w-full block"
+        style={{ display: "block", width: "100%", maxHeight: "72vh" }}
+      />
+      {onPleinEcran && (
+        <button
+          onClick={() => onPleinEcran(produit)}
+          className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold"
+          style={{ background: "#000000AA", color: texte, border: `1px solid ${bordure}` }}
+        >
+          <Maximize2 size={12} /> Plein écran
+        </button>
+      )}
+      {!produit.dispo && (
+        <span className="absolute top-3 left-3"><Etiquette couleur="#888">Épuisé</Etiquette></span>
+      )}
+    </div>
   );
 }
 
@@ -992,6 +1086,8 @@ export function ToutesLesFamilles({ familles, actif, onFamille, onTout, total, e
               </span>
               {EST_VIDEOS(f)
                 ? <PlayCircle size={13} color={cyan} />
+                : EN_RUPTURE(f)
+                ? <span style={{ color: texteDoux, fontWeight: 700, fontSize: 11 }}>ÉPUISÉ</span>
                 : <span style={{ color: texteDoux, fontWeight: 400, fontSize: 12 }}>{compte(f)} articles</span>}
             </button>
           ))}
