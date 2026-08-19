@@ -373,16 +373,62 @@ function Intro({ onFini }) {
       onClick={fermer}
     >
       {INTRO.video ? (
-        <video
-          src={INTRO.video}
-          autoPlay
-          muted
-          playsInline
-          onEnded={fermer}
-          onError={fermer}
-          className="max-w-full max-h-[76vh] rounded-2xl"
-          style={{ border: `2px solid ${rose}`, boxShadow: `0 0 40px ${rose}55` }}
-        />
+        /* LE TITRE PAR-DESSUS LA VIDÉO.
+
+           Le texte d'ouverture n'apparaissait que faute de vidéo : dès qu'on en
+           mettait une, le nom de la boutique disparaissait. Or c'est justement
+           là qu'il sert — trois secondes d'images, et rien pour dire chez qui
+           on vient d'entrer.
+
+           Il se pose donc SUR la vidéo, au centre, sur un voile sombre. Le
+           voile n'est pas une décoration : un titre clair sur des images
+           claires ne se lit pas, et une vidéo change d'image vingt-cinq fois
+           par seconde. Le voile est le seul moyen de tenir la lisibilité sans
+           connaître le film.
+
+           « pointer-events-none » : le doigt traverse le texte et atteint le
+           fond, qui referme l'ouverture. Sans cela, taper sur le titre — le
+           plus gros élément de l'écran — ne ferait rien. */
+        <div className="relative">
+          <video
+            src={INTRO.video}
+            autoPlay
+            muted
+            playsInline
+            onEnded={fermer}
+            onError={fermer}
+            className="block max-w-full max-h-[76vh] rounded-2xl"
+            style={{ border: `2px solid ${rose}`, boxShadow: `0 0 40px ${rose}55` }}
+          />
+          {INTRO.texte && (
+            <div
+              className="absolute inset-0 flex items-center justify-center px-5 rounded-2xl pointer-events-none"
+              style={{
+                /* Le voile est le plus sombre AU CENTRE, là où le titre se pose.
+                   Un dégradé du bas vers le haut, comme sur les tuiles de marque,
+                   laissait justement le milieu de l'image en clair : le texte y
+                   tombait sur la partie la moins couverte. */
+                background: "radial-gradient(ellipse at center, rgba(0,0,0,.66) 0%, rgba(0,0,0,.44) 58%, rgba(0,0,0,.58) 100%)",
+                /* L'ombre est portée par le cadre, non par le texte : les
+                   lettres sont transparentes — c'est le dégradé qui se voit à
+                   travers — et une ombre de texte n'aurait rien à assombrir. */
+                filter: "drop-shadow(0 2px 14px rgba(0,0,0,.9))",
+              }}
+            >
+              <p
+                className="atelier-anime text-center"
+                style={{
+                  fontFamily: TITRE, fontSize: "clamp(26px, 8.5vw, 54px)", lineHeight: 1.02,
+                  backgroundImage: DEGRADE, WebkitBackgroundClip: "text", backgroundClip: "text",
+                  color: "transparent",
+                  animation: "atelier-apparition .8s cubic-bezier(.2,.9,.2,1) both, atelier-lueur 2.4s ease-in-out .8s infinite",
+                }}
+              >
+                {INTRO.texte}
+              </p>
+            </div>
+          )}
+        </div>
       ) : (
         <>
           <p
