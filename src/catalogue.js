@@ -49,7 +49,12 @@ export const FAMILLES = [
         etiquette: "",
         sousTitre: "",
         produits: [
-          { ref: "REF-001", nom: "Nouveau produit", unite: "la pièce", prix: 0, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", image: "/produits/nouveau-produit.jpg" },
+          { ref: "REF-001", nom: "Nouveau produit", unite: "la pièce", prix: 0, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", cadrage: "entier", image: "/produits/nouveau-produit.jpg", 
+            images: ["/produits/nouveau-produit.jpg", "/produits/nouveau-produit-2.jpg"] },
+          { ref: "REF-002", nom: "Nouveau produit", unite: "la pièce", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", image: "/produits/nouveau-produit.jpg", 
+            images: ["/produits/nouveau-produit.jpg", "/produits/nouveau-produit-2.jpg"] },
+          { ref: "REF-003", nom: "Nouveau produit", unite: "la pièce", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", image: "/produits/nouveau-produit.jpg", 
+            images: ["/produits/nouveau-produit.jpg", "/produits/nouveau-produit-2.jpg"] },
         ],
       },
     ],
