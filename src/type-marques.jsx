@@ -169,30 +169,64 @@ export function EcranMarques({ onFamille }) {
 
 export function EcranCarrousel({ famille, onAjouter, onRetour }) {
   const modeles = MODELES(famille);
+
+  /* DEUX REPÈRES, ET NON UN SEUL.
+
+     « i » est le MODÈLE — c'est-à-dire la COULEUR. On en change en touchant
+     une vignette, sous la grande photo.
+
+     « j » est la PHOTO du modèle choisi. On en change avec les flèches posées
+     sur l'image, ou en la faisant glisser du doigt.
+
+     Les deux étaient confondus, et c'était une faute : les flèches sautaient
+     d'une couleur à l'autre, si bien que la deuxième vue d'une paire — celle
+     qui la montre sur sa boîte, de trois quarts — n'apparaissait nulle part.
+     Un client qui voulait voir l'autre photo de la TN noire tombait sur la
+     blanche.
+
+     Un geste, une seule chose : les vignettes changent la couleur, les flèches
+     tournent les photos de cette couleur. */
   const [i, setI] = useState(0);
+  const [j, setJ] = useState(0);
   const doigtX = useRef(null);
 
   const n = modeles.length;
-  const suivant = () => setI((k) => (k + 1) % n);
-  const precedent = () => setI((k) => (k - 1 + n) % n);
+  const courant = n ? modeles[Math.min(i, n - 1)] : null;
+
+  /* Les photos du modèle affiché. Si le vendeur n'en a mis aucune, le dessin
+     de secours en tient lieu : la galerie n'est jamais vide, et les flèches
+     n'ont donc jamais à naviguer dans du vide. */
+  const galerie = courant
+    ? (GALERIE(courant.produit).length
+        ? GALERIE(courant.produit)
+        : [visuelProduit(courant.produit, famille.couleurs, famille.glyphe)])
+    : [];
+  const np = galerie.length;
+
+  const suivant = () => setJ((k) => (k + 1) % np);
+  const precedent = () => setJ((k) => (k - 1 + np) % np);
 
   /* Changer de marque doit toujours ramener à la première page. Sans cela, on
      ouvre une marque de trois modèles en page 7 et l'écran paraît cassé. */
   useEffect(() => { setI(0); }, [famille.id]);
 
+  /* Et changer de couleur ramène à la première photo de cette couleur : on
+     ouvre la bleue sur la bleue de profil, jamais sur son carton. */
+  useEffect(() => { setJ(0); }, [i, famille.id]);
+
   useEffect(() => {
-    if (n < 2) return;
+    if (np < 2) return;
     const touche = (e) => {
       if (e.key === "ArrowRight") suivant();
       else if (e.key === "ArrowLeft") precedent();
     };
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
-  }, [n, famille.id]);
+  }, [np, i, famille.id]);
 
   const debut = (e) => { doigtX.current = e.touches[0].clientX; };
   const fin = (e) => {
-    if (doigtX.current === null || n < 2) return;
+    if (doigtX.current === null || np < 2) return;
     const ecart = e.changedTouches[0].clientX - doigtX.current;
     if (Math.abs(ecart) > 45) (ecart < 0 ? suivant : precedent)();
     doigtX.current = null;
@@ -216,8 +250,8 @@ export function EcranCarrousel({ famille, onAjouter, onRetour }) {
     );
   }
 
-  const { produit, gamme } = modeles[Math.min(i, n - 1)];
-  const photo = GALERIE(produit)[0] || visuelProduit(produit, famille.couleurs, famille.glyphe);
+  const { produit } = courant;
+  const photo = galerie[Math.min(j, np - 1)];
 
   /* LA PAGE D'UN MODÈLE — UNE COLONNE, DE HAUT EN BAS.
 
@@ -263,18 +297,26 @@ export function EcranCarrousel({ famille, onAjouter, onRetour }) {
           onError={(e) => { e.currentTarget.src = visuelProduit(produit, famille.couleurs, famille.glyphe); }}
         />
 
-        {n > 1 && (
+        {/* LES FLÈCHES TOURNENT LES PHOTOS DE CETTE COULEUR — rien d'autre.
+            Elles ne s'affichent donc que si le modèle a bien une deuxième vue,
+            et le petit compteur dit laquelle on regarde. Deux flèches qui ne
+            mènent nulle part valent mieux absentes. */}
+        {np > 1 && (
           <>
-            <button onClick={precedent} aria-label="Modèle précédent"
+            <button onClick={precedent} aria-label="Photo précédente"
               className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform"
               style={{ background: "#0C0C10D9", border: `1px solid ${bordure}` }}>
               <ChevronLeft size={20} color="#fff" />
             </button>
-            <button onClick={suivant} aria-label="Modèle suivant"
+            <button onClick={suivant} aria-label="Photo suivante"
               className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform"
               style={{ background: "#0C0C10D9", border: `1px solid ${bordure}` }}>
               <ChevronRight size={20} color="#fff" />
             </button>
+            <span className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg text-[11px] font-bold"
+              style={{ background: "#0C0C10E6", border: `1px solid ${bordure}`, color: "#D8D8D8", fontFamily: CORPS }}>
+              {j + 1} / {np}
+            </span>
           </>
         )}
 
@@ -303,7 +345,7 @@ export function EcranCarrousel({ famille, onAjouter, onRetour }) {
       {n > 1 && (
         <div className="mt-3 px-3">
           <p className="text-[11px] uppercase tracking-wider mb-2" style={{ color: texteDoux, fontFamily: CORPS }}>
-            {n} modèles
+            {n} modèles — touche pour changer
           </p>
           <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
             {modeles.map((m, k) => {
