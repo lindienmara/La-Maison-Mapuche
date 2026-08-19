@@ -15,8 +15,8 @@ export const FAMILLES = [
     couleurs: ["#11998E", "#0B5E4F"],
     gammes: [
       {
-        id: "modeles",
-        nom: "Modèles",
+        id: "https-www-youtube-com-watch-v-cjmdx1js1x",
+        nom: "https://www.youtube.com/watch?v=CJMdx1jS1xY",
         etiquette: "",
         sousTitre: "",
         produits: [
@@ -44,12 +44,12 @@ export const FAMILLES = [
     couleurs: ["#2E5BFF", "#12277A"],
     gammes: [
       {
-        id: "sans-nom",
-        nom: "",
+        id: "modele",
+        nom: "Modèle ",
         etiquette: "",
         sousTitre: "",
         produits: [
-          { ref: "REF-001", nom: "Gel-Nimbus Grise", unite: "la paire", prix: 0, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Gris et noir", cadrage: "entier", image: "/produits/gris-noire.jpg", 
+          { ref: "REF-001", nom: "Gel-Nimbus Grise", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Gris et noir", cadrage: "entier", image: "/produits/gris-noire.jpg", 
             images: ["/produits/gris-noire.jpg", "/produits/nouveau-produit-2.jpg"], 
             description: "La Gel-Nimbus en gris et noir, semelle crème et gel doré au talon. Maille respirante et empiècements argentés thermosoudés, semelle à amorti GEL et renfort Trusstic sous le pied. Chausse juste : prendre sa pointure habituelle." },
           { ref: "REF-002", nom: "Gel-Nimbus Blanche", unite: "la paire", prix: 60, dispo: true, tailles: "38 · 38,5 · 39 · 40 · 40,5 · 41 · 42 · 42,5 · 43 · 44 · 44,5 · 45 · 45,5 · 46 · 47 · 47,5", couleurs: "Blanc et gris", image: "/produits/nouveau-produit.jpg", 
@@ -73,8 +73,8 @@ export const FAMILLES = [
     couleurs: ["#F2994A", "#8A4B10"],
     gammes: [
       {
-        id: "saucony",
-        nom: "Saucony",
+        id: "modele",
+        nom: "Modèle ",
         etiquette: "",
         sousTitre: "",
         produits: [
